@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".OCRActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -16,16 +16,16 @@
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/capturebtn"
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/capturebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="87dp"
         android:layout_marginBottom="73dp"
-        android:text="Button"
+        android:text="capture"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
