@@ -22,6 +22,13 @@ import java.net.URL
 class OCRActivity : AppCompatActivity() {
     var imgbitmap: Bitmap? = null
     var imgbase64 : String = ""
+    var readWords = ArrayList<String>()
+    var searchResultArray = ArrayList<SearchData>()
+    var index = 0
+
+    fun findIndex():Int{
+        return index++
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,19 +110,14 @@ class OCRActivity : AppCompatActivity() {
     fun parseJSON(input : String){
         val inputLine = String(input.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
         val fields = (JSONObject(inputLine).getJSONArray("images").get(0) as JSONObject).getJSONArray("fields")
-        var readWords = ArrayList<String>()
 
         for(i in 0 .. fields.length() - 1){
             val inferText = (fields.get(i) as JSONObject).getString("inferText")
             readWords.add(inferText)
         }
-    }
 
-    class NaverSearchAsyncTask(context: OCRActivity): AsyncTask<URL, Unit, Unit>() {
-        override fun doInBackground(vararg p0: URL?) {
-            val url = URL("https://openapi.naver.com/v1/search/news.json")
-            val connection = url.openConnection() as HttpURLConnection
-
-        }
+        val intent = Intent(this, OCRDetailActivity::class.java)
+        intent.putExtra("readWords", readWords)
+        startActivity(intent)
     }
 }
