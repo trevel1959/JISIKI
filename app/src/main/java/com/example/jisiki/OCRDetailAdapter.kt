@@ -3,6 +3,9 @@ package com.example.jisiki
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -17,16 +20,25 @@ class OCRDetailAdapter (val items:ArrayList<String>)
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var textView: TextView = itemView.findViewById(R.id.textView3)
+        var editSpace:LinearLayout = itemView.findViewById(R.id.editSpace)
+        var editText: EditText = itemView.findViewById(R.id.editTextWords)
+        var editbtn:Button = itemView.findViewById(R.id.editButton)
 
         init{
-            itemView.setOnClickListener(){
+
+            textView.setOnClickListener{
                 itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
+            }
+
+            editbtn.setOnClickListener{
+                items[adapterPosition] = editText.text.toString()
+                notifyDataSetChanged()
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.row, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.ocr_detail_row, parent, false)
         return MyViewHolder(v)
     }
 

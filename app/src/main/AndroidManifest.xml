@@ -15,20 +15,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyPageSettingActivity"></activity>
-        <activity android:name=".MyPageActivity" />
-        <activity android:name=".SearchHistoryActivity" />
-        <activity android:name=".OCRDetailActivity" />
-        <activity android:name=".SearchResultDetailActivity" />
-        <activity android:name=".SearchResultActivity" />
-        <activity android:name=".IntroActivity" />
-        <activity android:name=".OCRActivity">
+        <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".OCRActivity"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+        <activity android:name=".OCRDetailActivity" />
+        <activity android:name=".SearchResultActivity" />
+        <activity android:name=".SearchResultDetailActivity" />
+
+        <activity android:name=".SearchHistoryActivity" />
+
+        <activity android:name=".MyPageActivity" />
+
+        <activity android:name=".MyPageSettingActivity"></activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.jisiki.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

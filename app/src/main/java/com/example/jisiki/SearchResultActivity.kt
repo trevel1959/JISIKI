@@ -2,6 +2,8 @@ package com.example.jisiki
 
 import android.os.AsyncTask
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_search_result.*
@@ -15,6 +17,7 @@ import java.net.URLEncoder
 
 //검색 결과를 뉴스 글 수로 정렬해 보여주는 액티비티.
 class SearchResultActivity : AppCompatActivity() {
+    var productName =""
     var readWords = ArrayList<String>()
     var index = 0
     var searchResultArray = ArrayList<SearchData>()
@@ -29,19 +32,28 @@ class SearchResultActivity : AppCompatActivity() {
 
     private fun init() {
         readWords = intent.extras["readWords"] as ArrayList<String>
+        productName = intent.extras["productName"] as String
 
         val searchTask = NaverSearchAsyncTask(this)
         searchTask.execute()
 
         while(!flag){
         }
-        recyclerViewInit()
-    }
 
-    fun recyclerViewInit(){
-        textView2.text = "real Done."
         recyclerViewASR.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         adapter = SearchResultAdapter(searchResultArray)
+
+        adapter.itemClickListener = object: SearchResultAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: SearchResultAdapter.MyViewHolder,
+                view: View,
+                data: SearchData,
+                position: Int
+            ) {
+                Toast.makeText(this@SearchResultActivity, data.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
         recyclerViewASR.adapter = adapter
     }
 
@@ -54,14 +66,15 @@ class SearchResultActivity : AppCompatActivity() {
                 val clientId = "jNZbBbG2dPcMJzZYO725"
                 val clientSecret = "lfCEUF2h3a"
 
-                var text: String? = null
-                text = try {
+                var searchWord: String? = null
+                var productName = activity.productName
+                searchWord = try {
                     URLEncoder.encode(activity?.readWords[i], "UTF-8")
                 } catch (e: UnsupportedEncodingException) {
                     throw RuntimeException("검색어 인코딩 실패", e)
                 }
 
-                val apiURL = "https://openapi.naver.com/v1/search/news.json?query=$text" // json 결과
+                val apiURL = "https://openapi.naver.com/v1/search/news.json?query=$productName%20$searchWord" // json 결과
 
                 val requestHeaders: MutableMap<String, String> = HashMap()
                 requestHeaders["X-Naver-Client-Id"] = clientId
@@ -78,6 +91,7 @@ class SearchResultActivity : AppCompatActivity() {
 
             activity?.adapter = SearchResultAdapter(activity?.searchResultArray!!)
             activity?.recyclerViewASR.adapter = activity?.adapter
+
         }
 
         private operator fun get(
