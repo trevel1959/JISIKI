@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_o_c_r_detail.*
 import java.time.LocalDateTime
 
 // OCR을 통해 추출된 문자들을 정리하는 액티비티.
+//TODO("여러개 선택됬을 때 뭔가 꼬이는 버그 수정해야함.")
 class OCRDetailActivity : AppCompatActivity() {
     lateinit var adapter: OCRDetailAdapter
     private var readWords = ArrayList<String>()
@@ -53,6 +54,7 @@ class OCRDetailActivity : AppCompatActivity() {
                 flag = true
                 dialogInterface.dismiss()
             }
+
             ad.setNegativeButton("닫기") { dialogInterface: DialogInterface, i: Int ->
                 flag = true
                 dialogInterface.dismiss()

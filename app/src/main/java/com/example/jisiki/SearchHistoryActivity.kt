@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_search_history.*
 
 //검색했던 제품명/원재료명을 쭉 나열하는 액티비티.
+//TODO("두번째 클릭하면 멈추는 버그 수정해야함.")
 class SearchHistoryActivity : AppCompatActivity() {
     lateinit var adapter :SearchHistoryAdapter
 

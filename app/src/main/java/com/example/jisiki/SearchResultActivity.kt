@@ -16,6 +16,7 @@ import java.net.URL
 import java.net.URLEncoder
 
 //검색 결과를 뉴스 글 수로 정렬해 보여주는 액티비티.
+//TODO("메뉴 하나 더 만들어서, 영양정보 저장할 수 있는 액티비티로 넘어가야 함.")
 class SearchResultActivity : AppCompatActivity() {
     var productName =""
     var readWords = ArrayList<String>()

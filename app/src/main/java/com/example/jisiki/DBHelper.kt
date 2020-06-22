@@ -16,7 +16,6 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         val DB_NAME = "mydb.db"
 
         val TABLE_SEARCH_HISTORY_NAME = "searchHistoryTable"
-        val INDEX = "index"
         val PNAME = "productName"
         val SEARCH_TIME = "searchTime"
         val SEARCH_IMAGE = "searchImage"
@@ -26,13 +25,15 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         val INGREDIENT_NAME = "ingredientName"
 
         val TABLE_FOOD_EATEN_NAME = "foodEatenTable"
-        //INGREDIENT_NAME 공유
+        //PNAME 공유
         //SEARCH_TIME 공유
         val FOOD_QUANTITY = "foodQuantity"
 
         val TABLE_USER_DATA_NAME = "userDataTable"
         val USER_AGE = "userAge"
         val USER_GENDER = "userGender"
+        val USER_HEIGHT = "userHeight"
+        val USER_WEIGHT = "userWeight"
         val USER_ACTIVE = "userActive"
 
         val TMP_IMAGE = "tmpImageTable"
@@ -79,14 +80,16 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         db?.execSQL(create_table)
 
         create_table = "create table if not exists " + TABLE_FOOD_EATEN_NAME + "(" +
-                INGREDIENT_NAME + " text, " +
+                PNAME + " text, " +
                 SEARCH_TIME + " text, " +
-                FOOD_QUANTITY + " integer)"
+                FOOD_QUANTITY + " text)"
         db?.execSQL(create_table)
 
         create_table = "create table if not exists " + TABLE_USER_DATA_NAME + "(" +
                 USER_AGE + " integer, "+
-                USER_GENDER + "text, "+
+                USER_GENDER + " text, "+
+                USER_HEIGHT + " REAL, "+
+                USER_WEIGHT + " REAL, "+
                 USER_ACTIVE + " integer)"
         db?.execSQL(create_table)
 
@@ -138,22 +141,38 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
             TABLE_FOOD_EATEN_NAME->{
                 values.put(INGREDIENT_NAME, data1)
                 values.put(SEARCH_TIME, data2)
-                values.put(FOOD_QUANTITY, data3.toInt())
+                values.put(FOOD_QUANTITY, data3)
 
                 val db = this.writableDatabase
-                db.insert(TABLE_SEARCH_HISTORY_NAME, null, values)
-                db.close()
-            }
-            TABLE_USER_DATA_NAME->{
-                values.put(USER_AGE, data1.toInt())
-                values.put(USER_GENDER, data2)
-                values.put(USER_ACTIVE, data3.toInt())
-
-                val db = this.writableDatabase
-                db.insert(TABLE_SEARCH_HISTORY_NAME, null, values)
+                db.insert(TABLE_FOOD_EATEN_NAME, null, values)
                 db.close()
             }
         }
+    }
+
+    fun insertUserData(data1: Int, data2: String, data3: Double, data4: Double, data5: Int){
+        val db = this.writableDatabase
+        var drop_table = "drop table if exists $TABLE_USER_DATA_NAME"
+        db?.execSQL(drop_table)
+
+        var create_table = "create table " + TABLE_USER_DATA_NAME + "(" +
+                USER_AGE + " integer, "+
+                USER_GENDER + " text, "+
+                USER_HEIGHT + " REAL, "+
+                USER_WEIGHT + " REAL, "+
+                USER_ACTIVE + " integer)"
+        db?.execSQL(create_table)
+
+        val values = ContentValues()
+
+        values.put(USER_AGE, data1)
+        values.put(USER_GENDER, data2)
+        values.put(USER_HEIGHT, data3)
+        values.put(USER_WEIGHT, data4)
+        values.put(USER_ACTIVE, data5)
+
+        db.insert(TABLE_USER_DATA_NAME, null, values)
+        db.close()
     }
 
     fun getAll(tableName: String):ArrayList<String>{
@@ -172,11 +191,39 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
                         val searchImage = cursor.getString(2)
                         list.add(SearchHistory(pname, searchTime, searchImage))
                     }
+                    cursor.close()
+                    db.close()
                     return (list as ArrayList<String>)
                 }
 
+                TABLE_USER_DATA_NAME->{
+                    var list = ArrayList<String>()
+                    list.add(cursor.getString(0))
+                    list.add(cursor.getString(1))
+                    list.add(cursor.getString(2))
+                    list.add(cursor.getString(3))
+                    list.add(cursor.getString(4))
+
+                    cursor.close()
+                    db.close()
+                    return list
+                }
+
+                TABLE_FOOD_EATEN_NAME->{
+                    var list = ArrayList<SearchHistory>()
+                    while(cursor.moveToNext()){
+                        val pname = cursor.getString(0)
+                        val searchTime = cursor.getString(1)
+                        val searchImage = cursor.getString(2)
+                        list.add(SearchHistory(pname, searchTime, searchImage))
+                    }
+                    cursor.close()
+                    db.close()
+                    return (list as ArrayList<String>)
+                }
             }
         }
+
         cursor.close()
         db.close()
         return ArrayList<String>()
