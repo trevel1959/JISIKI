@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     //검색 결과의 DB 테이블은 3개.
@@ -96,8 +95,6 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         create_table = "create table if not exists " + TMP_IMAGE + "(" +
                 IMG + " text)"
         db?.execSQL(create_table)
-
-        Log.e("real", "why")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
