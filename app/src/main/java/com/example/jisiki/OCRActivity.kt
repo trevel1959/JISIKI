@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.jisiki.IntroActivity.Companion.dbHelper
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_ocr.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,10 +35,11 @@ class OCRActivity : AppCompatActivity() {
     var readWords = ArrayList<String>()
     var mCurrentPhotoPath:String? = null
     val REQUEST_TAKE_PHOTO = 1
+    lateinit var task: OCRAsyncTask
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_ocr)
         init()
     }
 
@@ -47,15 +49,19 @@ class OCRActivity : AppCompatActivity() {
         }
         searchBtn.setOnClickListener{
             if(imgbase64 != ""){
-                val task = OCRAsyncTask(this)
+                task = OCRAsyncTask(this)
                 task.execute(null)
-                //finish()
             }
             else
                 Toast.makeText(this, "사진을 찍어주세요.", Toast.LENGTH_SHORT).show()
         }
 
         takePicture()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     fun takePicture(){
@@ -123,9 +129,11 @@ class OCRActivity : AppCompatActivity() {
     }
 
     private fun getImageUri(context: Context, inImage: Bitmap):Uri {
+        val date = LocalDateTime.now()
+
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path:String = MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
+        val path:String = MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "image_${date.toString()}", null)
         return Uri.parse(path);
     }
 
@@ -187,6 +195,8 @@ class OCRActivity : AppCompatActivity() {
 
             var input = DataInputStream(connection.inputStream)
             activity?.parseJSON(input.readLine())
+
+            cancel(true)
         }
     }
 
@@ -208,5 +218,7 @@ class OCRActivity : AppCompatActivity() {
             readWords.clear()
             //imageView.setImageResource(R.drawable.pressButton)
         }
+
+
     }
 }

@@ -229,7 +229,7 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         return ArrayList<String>()
     }
 
-    fun getByDate(tableName: String, searchTime:String):ArrayList<String>{
+    fun getByTime(tableName: String, searchTime:String):ArrayList<String>{
         val strsql = "select * from $tableName" + " where " + SEARCH_TIME + " = \'" + searchTime + "\'"
         val db = this.readableDatabase
         val cursor = db.rawQuery(strsql, null)
@@ -253,15 +253,27 @@ class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null,
         return ArrayList<String>()
     }
 
-    fun delete(data: SearchData){
+    fun getByDate(tableName: String, searchDate:String):ArrayList<String>{
+        val strsql = "select * from $tableName" + " where " + SEARCH_TIME + " LIKE \'" + searchDate + "%\'"
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(strsql, null)
 
-    }
+        if(cursor.count != 0){
+            cursor.moveToFirst()
 
-    fun find(data: String){
+            when(tableName){
+                TABLE_FOOD_EATEN_NAME->{
+                    var list = ArrayList<String>()
+                    while(cursor.moveToNext()){
+                        list.add(cursor.getString(2))
+                    }
+                    return list
+                }
 
-    }
-
-    fun getAll(){
-
+            }
+        }
+        cursor.close()
+        db.close()
+        return ArrayList<String>()
     }
 }

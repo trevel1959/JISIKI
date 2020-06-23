@@ -27,19 +27,19 @@ class IntroActivity : AppCompatActivity() {
         }
         dbHelper = DBHelper(this)
 
-        button.setOnClickListener{
+        imageButton6.setOnClickListener{
             val intent = Intent(this, OCRActivity::class.java)
             startActivity(intent)
         }
-        button2.setOnClickListener{
+        imageButton7.setOnClickListener{
             val intent = Intent(this, SearchHistoryActivity::class.java)
             startActivity(intent)
         }
-        button3.setOnClickListener{
+        imageButton8.setOnClickListener{
             val intent = Intent(this, MyPageActivity::class.java)
             startActivity(intent)
         }
-        button4.setOnClickListener{
+        imageButton9.setOnClickListener{
             val intent = Intent(this, MyPageSettingActivity::class.java)
             startActivity(intent)
         }

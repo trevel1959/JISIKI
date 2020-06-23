@@ -9,9 +9,9 @@
         android:id="@+id/searchResultTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:background="@color/jisikiColorLight"
-        android:padding="20dp"
+        android:padding="10dp"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold" />

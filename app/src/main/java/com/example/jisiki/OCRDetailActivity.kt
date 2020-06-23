@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jisiki.IntroActivity.Companion.dbHelper
-import kotlinx.android.synthetic.main.activity_o_c_r_detail.*
+import kotlinx.android.synthetic.main.activity_ocr_detail.*
 import java.time.LocalDateTime
 
 // OCR을 통해 추출된 문자들을 정리하는 액티비티.
@@ -29,12 +29,12 @@ class OCRDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_o_c_r_detail)
+        setContentView(R.layout.activity_ocr_detail)
         init()
     }
         
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.ocr_detail_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -103,10 +103,16 @@ class OCRDetailActivity : AppCompatActivity() {
             totalString += readWords[0]
             readWords.removeAt(0)
         }
-        readWords = ArrayList(totalString.split(",".toRegex()))
+        var tmpReadWords = ArrayList(totalString.split(",", "(", ")", "{", "}", "[", "]", "·", ".", ":"))
+
+        for(item in tmpReadWords){
+            item.trim()
+            if(item != "")
+                readWords.add(item)
+        }
 
         recyclerViewACD.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter = OCRDetailAdapter(readWords)
+        adapter = OCRDetailAdapter(readWords, 0)
 
         adapter.itemClickListener = object: OCRDetailAdapter.OnItemClickListener{
             override fun OnItemClick(
@@ -115,14 +121,21 @@ class OCRDetailActivity : AppCompatActivity() {
                 data: String,
                 position: Int
             ) {
-                holder.editText.setText(holder.textView.text)
-
                 when(holder.editSpace.visibility){
                     View.VISIBLE->
                         holder.editSpace.visibility = View.GONE
                     View.GONE->
                         holder.editSpace.visibility = View.VISIBLE
                 }
+            }
+
+            override fun OnButtonClick(
+                holder: OCRDetailAdapter.MyViewHolder,
+                view: View,
+                data: String,
+                position: Int
+            ) {
+                OnItemClick(holder, view, data, position)
             }
         }
 

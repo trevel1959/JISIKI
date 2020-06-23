@@ -2,6 +2,7 @@ package com.example.jisiki
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +66,14 @@ class SearchResultAdapter(val items:ArrayList<SearchData>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val totalNum = items[position].result.getInt("total")
+        Log.i("items[].result", items[position].result.toString())
+        val totalNumStr = items[position].result.getString("total")
+        val totalNum = if(totalNumStr.isEmpty()){
+            0
+        }
+        else{
+            totalNumStr.toInt()
+        }
         holder.textView.text = items[position].word + " : " + totalNum + "건"
 
         if(totalNum == 0)

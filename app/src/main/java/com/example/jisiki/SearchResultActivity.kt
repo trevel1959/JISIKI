@@ -1,7 +1,10 @@
 package com.example.jisiki
 
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +26,7 @@ class SearchResultActivity : AppCompatActivity() {
     var index = 0
     var searchResultArray = ArrayList<SearchData>()
     lateinit var adapter: SearchResultAdapter
+    lateinit var taskResult:SearchResultAsyncTask
     var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +35,28 @@ class SearchResultActivity : AppCompatActivity() {
         init()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_result_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val intent = Intent(this, NutrientDetailActivity::class.java)
+        intent.putExtra("productName", productName)
+        startActivity(intent)
+        return true
+    }
+
     private fun init() {
         readWords = intent.extras["readWords"] as ArrayList<String>
         productName = intent.extras["productName"] as String
 
-        val searchTask = NaverSearchAsyncTask(this)
-        searchTask.execute()
+        taskResult = SearchResultAsyncTask(this)
+        taskResult.execute()
 
         while(!flag){
         }
@@ -58,7 +78,7 @@ class SearchResultActivity : AppCompatActivity() {
         recyclerViewASR.adapter = adapter
     }
 
-    class NaverSearchAsyncTask(context: SearchResultActivity): AsyncTask<URL, Unit, Unit>() {
+    class SearchResultAsyncTask(context: SearchResultActivity): AsyncTask<URL, Unit, Unit>() {
         val activityreference = WeakReference(context)
         val activity = activityreference.get()
 
@@ -83,8 +103,11 @@ class SearchResultActivity : AppCompatActivity() {
                 val responseBody: String? = get(apiURL, requestHeaders)
 
                 activity?.searchResultArray.add(SearchData(activity.readWords[i]!!, JSONObject(responseBody)))
+                Thread.sleep(100L)
             }
             activity?.flag = true
+
+            cancel(true)
         }
 
         override fun onPostExecute(result: Unit?) {

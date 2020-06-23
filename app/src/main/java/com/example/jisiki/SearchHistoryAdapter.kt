@@ -27,7 +27,7 @@ class SearchHistoryAdapter (val items:ArrayList<SearchHistory>)
 
         init{
             textView.setOnClickListener{
-                val readWords = IntroActivity.dbHelper.getByDate(DBHelper.TABLE_SEARCH_WORD_NAME, items[position].searchTime)
+                val readWords = IntroActivity.dbHelper.getByTime(DBHelper.TABLE_SEARCH_WORD_NAME, items[position].searchTime)
                 var intent = Intent(context, SearchResultActivity::class.java)
                 intent.putExtra("productName", items[position].productName)
                 intent.putExtra("readWords", readWords)
